@@ -2,7 +2,7 @@ public class Data
 {
     private static int formato = 0; // 0 para britânico, 1 para americano, 2 para italiano, 3 para germânico e 4 para ANSI
     private static int termos[] = {0,1,2}; // 0 - aparece antes do 1º separador, 1 - aparece entre os separadores, 2 - aparece após o 3º separador
-    private static String separador = "/";
+    private static char separador = '/';
 
     private int componentes[] = new int[3];
 
@@ -14,13 +14,13 @@ public class Data
           termos[0] = 0;
           termos[1] = 1;
           termos[2] = 2;
-          separador = "/";
+          separador = '/';
         break;
         case 1: // formato americano: MM/DD/AAAA 
           termos[0] = 1;
           termos[1] = 0;
           termos[2] = 2;
-          separador = "/";
+          separador = '/';
         break;
         case 2: // formato italiano: DD-MM-AAAA 
           termos[0] = 0; 
@@ -44,6 +44,11 @@ public class Data
           return false;
         }
     return true;
+    }
+
+    public static boolean bissexto(int ano)
+    {
+      return ( (ano%4)==0 && (ano%100)!=0 || (ano%400)==0 );
     }
 
     public static boolean consistencia(int dia, int mes, int ano) 
@@ -83,7 +88,7 @@ public class Data
     }
     public Data(String sd)
     {
-        stringData(sd);
+      this.stringData(sd);
     }
     public Data(Data data)
     {
@@ -92,26 +97,88 @@ public class Data
 
     public boolean stringData(String string) // A instancia que ativa este método deve assumir o valor correspondente à string recebida como parâmetro. A data passará pela consistencia, retornará true para data OK, e false para data inválida.
     {
-        return false;
+        int[] pos = new int[2];
+        for (int i = 0; i < string.length(); i++) {
+            if (string.charAt(i) == separador) {
+                pos[0] = i;
+                break;
+            }
+        }
+        for(int i= pos[0]+1; i < string.length(); i++) {
+            if (string.charAt(i) == separador) {
+                pos[1] = i;
+                break;
+            } // 12/101900
+        }
+        try {
+            componentes[termos[0]] = Integer.parseInt(string.substring(0, pos[0]));
+            componentes[termos[1]] = Integer.parseInt(string.substring(pos[0] + 1, pos[1]));
+            componentes[termos[2]] = Integer.parseInt(string.substring(pos[1] + 1));
+        } catch (Exception e) { return false; }
+
+        return consistencia(componentes[termos[0]], componentes[termos[1]], componentes[termos[2]]);
     }
-    public String dataString() // Retorna uma string a partir do conteúdo da instancia que ativa o método, de modo que seja respeitado o formato.
-    {
-        return String;
+
+    public String dataString() {
+    return ("" +
+        componentes[termos[0]] + separador +
+        componentes[termos[1]] + separador +
+        componentes[termos[2]]
+      );
     }
+
     
     private long dataDias() // nº de dias decorridos desde 1 de janeiro de 1900 até a data conteúdo da instância.
     {
+      long dias = 0, ctano = 1900, ctmes = 1; 
+ 
+      while(ctano < componentes[2]) 
+      { 
+        dias += (bissexto(ctano)) ? 366 : 365; 
+        ctano++; 
+      }
 
+      while(ctmes < componentes[1]) 
+      { 
+        dias += diasMes(ctmes, ctano); 
+        ctmes++; 
+      }
+
+      dias += componentes[0]; 
+      return dias; 
     }
+
     private void diasData(long d) //dias desde 1-jan-1900, define o conteúdo da instancia que ativa o método
     {
-
+      long ctano = 1900, ctmes = 1, delta = 0, ctdias = 0;
+    
+      while(ctdias < d) 
+      { 
+        delta = (bissexto(ctano)) ? 366 : 365; 
+        ctdias += delta;
+        ctano++; 
+      }
+      ctdias -= delta; 
+      componentes[2] = ctano; 
+    
+      while(ctdias < d) 
+      { 
+        delta = diasMes(ctmes, ctano); 
+        ctdias += delta; 
+        ctmes++; 
+      } 
+      ctdias -= delta; 
+      componentes[1] = ctmes; 
+      componentes[0] = d - ctdias;
     }
 
     public Data soma(int dias) // Data + dias => Outra Data posterior em dias
     {
-        // ...
+      Data tempData = new Data(1,1,1900);
+      tempData.diasData( dataDias() + dias);
+      return tempData;
     }
+
     public Data sub(int dias) // Data – dias => Data anterior em dias
     {
         // ...
