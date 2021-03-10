@@ -1,3 +1,6 @@
+// ILP007 - José Paulo Ciscato
+// Data.java -  Classe para manipulação de datas.
+
 public class Data
 {
     private static int formato = 0; // 0 para britânico, 1 para americano, 2 para italiano, 3 para germânico e 4 para ANSI
@@ -46,21 +49,24 @@ public class Data
     return true;
     }
 
-    public static boolean bissexto(int ano)
+    // método de classe para verificação de ano bissexto
+    public static boolean bissexto(int ano) 
     {
       return ( (ano%4)==0 && (ano%100)!=0 || (ano%400)==0 );
     }
 
+    // método de classe para verificação de consistência da data
     public static boolean consistencia(int dia, int mes, int ano) 
     { 
-      if(mes < 1 || mes > 12) // Se mês for menor que 1 ou maior que 12
-        return false; // retorne FALSO (Inválido)
-      else if (dia < 1 || dia > diasMes(mes, ano)) // Se não, se dia for menor que 1 ou maior que o dia válido do mês
-        return false; // retorne FALSO (Inválido)
-      else  // Se não for nenhum dos dois casos
-        return true; // retorne VERDADEIRO (Válido)
+      if(mes < 1 || mes > 12)
+        return false;
+      else if (dia < 1 || dia > diasMes(mes, ano))
+        return false;
+      else
+        return true;
     }
 
+    // método de classe para correta distribuição de dias de um determinado mês
     public static int diasMes(int mes, int ano) 
     { 
       int dias; 
@@ -82,44 +88,57 @@ public class Data
       return dias; 
     } 
 
+    // método construtor com parâmetros int
     public Data(int d, int m, int a)
     {
-        // ...
+      // ...
     }
+
+    // método construtor com parâmetro String
     public Data(String sd)
     {
       this.stringData(sd);
     }
+
+    // método construtor de cópia com parâmetro Data
     public Data(Data data)
     {
-        // ...
+      // ...
     }
 
+    // método boolean para definir valor da data por meio de uma String, e validar se a data é válida
     public boolean stringData(String string) // A instancia que ativa este método deve assumir o valor correspondente à string recebida como parâmetro. A data passará pela consistencia, retornará true para data OK, e false para data inválida.
     {
-        int[] pos = new int[2];
-        for (int i = 0; i < string.length(); i++) {
-            if (string.charAt(i) == separador) {
-                pos[0] = i;
-                break;
-            }
-        }
-        for(int i= pos[0]+1; i < string.length(); i++) {
-            if (string.charAt(i) == separador) {
-                pos[1] = i;
-                break;
-            } // 12/101900
-        }
-        try {
-            componentes[termos[0]] = Integer.parseInt(string.substring(0, pos[0]));
-            componentes[termos[1]] = Integer.parseInt(string.substring(pos[0] + 1, pos[1]));
-            componentes[termos[2]] = Integer.parseInt(string.substring(pos[1] + 1));
-        } catch (Exception e) { return false; }
+      int[] pos = new int[2];
+      for (int i = 0; i < string.length(); i++) 
+      {
+          if (string.charAt(i) == separador) 
+          {
+              pos[0] = i;
+              break;
+          }
+      }
+      for(int i= pos[0]+1; i < string.length(); i++) 
+      {
+          if (string.charAt(i) == separador) 
+          {
+              pos[1] = i;
+              break;
+          }
+      }
+      try 
+      {
+          componentes[termos[0]] = Integer.parseInt(string.substring(0, pos[0]));
+          componentes[termos[1]] = Integer.parseInt(string.substring(pos[0] + 1, pos[1]));
+          componentes[termos[2]] = Integer.parseInt(string.substring(pos[1] + 1));
+      } catch (Exception e) { return false; }
 
-        return consistencia(componentes[termos[0]], componentes[termos[1]], componentes[termos[2]]);
+      return consistencia(componentes[termos[0]], componentes[termos[1]], componentes[termos[2]]);
     }
 
-    public String dataString() {
+    // método String para retornar a data contida numa string
+    public String dataString() 
+    {
     return ("" +
         componentes[termos[0]] + separador +
         componentes[termos[1]] + separador +
@@ -128,35 +147,27 @@ public class Data
     }
 
     
-    private long dataDias() // nº de dias decorridos desde 1 de janeiro de 1900 até a data conteúdo da instância.
+    public long dataDias() // nº de dias decorridos desde 1 de janeiro de 1900 até a data conteúdo da instância.
     {
-      long dias = 0, ctano = 1900, ctmes = 1; 
- 
-      while(ctano < componentes[2]) 
-      { 
-        dias += (bissexto(ctano)) ? 366 : 365; 
-        ctano++; 
+      long dias = componentes[0];
+      for (int ctano = 1900; ctano < componentes[2]; ++ctano){ 
+        dias += bissexto(ctano) ? 366 : 365;
       }
-
-      while(ctmes < componentes[1]) 
-      { 
-        dias += diasMes(ctmes, ctano); 
-        ctmes++; 
+      for (int ctmes = 1; ctmes < componentes[1]; ++ctmes){
+        dias += diasMes(ctmes, componentes[2]); 
       }
-
-      dias += componentes[0]; 
       return dias; 
     }
 
     private void diasData(long d) //dias desde 1-jan-1900, define o conteúdo da instancia que ativa o método
     {
-      long ctano = 1900, ctmes = 1, delta = 0, ctdias = 0;
+      int ctano = 1900, ctmes = 1, ctdias = 0, delta;
     
       while(ctdias < d) 
       { 
-        delta = (bissexto(ctano)) ? 366 : 365; 
+        delta = (bissexto(ctano)) ? 366 : 365;
         ctdias += delta;
-        ctano++; 
+        ++ctano; 
       }
       ctdias -= delta; 
       componentes[2] = ctano; 
@@ -165,7 +176,7 @@ public class Data
       { 
         delta = diasMes(ctmes, ctano); 
         ctdias += delta; 
-        ctmes++; 
+        ++ctmes; 
       } 
       ctdias -= delta; 
       componentes[1] = ctmes; 
@@ -174,17 +185,21 @@ public class Data
 
     public Data soma(int dias) // Data + dias => Outra Data posterior em dias
     {
-      Data tempData = new Data(1,1,1900);
-      tempData.diasData( dataDias() + dias);
+      int d = componentes[termos[0]];
+      int m = componentes[termos[1]];
+      int a = componentes[termos[2]];
+      
+      Data tempData = new Data("01/01/1900");
+      tempData.diasData( dataDias() - dias );
       return tempData;
     }
 
-    public Data sub(int dias) // Data – dias => Data anterior em dias
-    {
-        // ...
-    }
-    public long sub(Data d) // Data – Data => dias decorridos entre as duas datas.
-    {
-        // ...
-    }
+    // public Data sub(int dias) // Data – dias => Data anterior em dias
+    // {
+    //     // ...
+    // }
+    // public int sub(Data d) // Data – Data => dias decorridos entre as duas datas.
+    // {
+    //     // ...
+    // }
 }
