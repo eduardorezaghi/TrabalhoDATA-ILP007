@@ -161,7 +161,7 @@ public class Data
 
     private void diasData(long d) //dias desde 1-jan-1900, define o conteúdo da instancia que ativa o método
     {
-      int ctano = 1900, ctmes = 1, ctdias = 0, delta;
+      int ctano = 1900, ctmes = 1, ctdias = 0, delta = 0;
     
       while(ctdias < d) 
       { 
@@ -180,7 +180,7 @@ public class Data
       } 
       ctdias -= delta; 
       componentes[1] = ctmes; 
-      componentes[0] = d - ctdias;
+      componentes[0] = (int) d - ctdias;
     }
 
     public Data soma(int dias) // Data + dias => Outra Data posterior em dias
@@ -190,7 +190,7 @@ public class Data
       int a = componentes[termos[2]];
       
       Data tempData = new Data("01/01/1900");
-      tempData.diasData( dataDias() - dias );
+      tempData.diasData( this.dataDias() - dias );
       return tempData;
     }
 
@@ -198,7 +198,7 @@ public class Data
     // {
     //     // ...
     // }
-    // public int sub(Data d) // Data – Data => dias decorridos entre as duas datas.
+    // public long sub(Data d) // Data – Data => dias decorridos entre as duas datas.
     // {
     //     // ...
     // }
