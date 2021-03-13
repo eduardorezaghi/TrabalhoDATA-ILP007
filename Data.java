@@ -1,12 +1,15 @@
-// ILP007 - José Paulo Ciscato
-// Data.java -  Classe para manipulação de datas.
-
+//   ILP007  – José Paulo Ciscato
+// Data.java – Classe para manipulação de datas.
+/* NOMES  
+*  EDUARDO AUGUSTO REZAGHI TALIANI    RA: 192072-12
+*  RICARDO MOLINA OLIVEIRA DE AMORIM  RA: 
+*  YURI TAKAE WATANABE                RA: 
+*/
 public class Data
 {
     private static int formato = 0; // 0 para britânico, 1 para americano, 2 para italiano, 3 para germânico e 4 para ANSI
     private static int termos[] = {0,1,2}; // 0 - aparece antes do 1º separador, 1 - aparece entre os separadores, 2 - aparece após o 3º separador
     private static char separador = '/';
-
     private int componentes[] = new int[3];
 
     public static boolean mudaFormato(int formato)
@@ -107,30 +110,30 @@ public class Data
     }
 
     // método boolean para definir valor da data por meio de uma String, e validar se a data é válida
-    public boolean stringData(String string) // A instancia que ativa este método deve assumir o valor correspondente à string recebida como parâmetro. A data passará pela consistencia, retornará true para data OK, e false para data inválida.
+    public boolean stringData(String string)
     {
       int[] pos = new int[2];
       for (int i = 0; i < string.length(); i++) 
       {
-          if (string.charAt(i) == separador) 
-          {
-              pos[0] = i;
-              break;
-          }
+        if (string.charAt(i) == separador) 
+        {
+            pos[0] = i;
+            break;
+        }
       }
       for(int i= pos[0]+1; i < string.length(); i++) 
       {
-          if (string.charAt(i) == separador) 
-          {
-              pos[1] = i;
-              break;
-          }
+        if (string.charAt(i) == separador) 
+        {
+            pos[1] = i;
+            break;
+        }
       }
       try 
       {
-          componentes[termos[0]] = Integer.parseInt(string.substring(0, pos[0]));
-          componentes[termos[1]] = Integer.parseInt(string.substring(pos[0] + 1, pos[1]));
-          componentes[termos[2]] = Integer.parseInt(string.substring(pos[1] + 1));
+        componentes[termos[0]] = Integer.parseInt(string.substring(0, pos[0]));
+        componentes[termos[1]] = Integer.parseInt(string.substring(pos[0] + 1, pos[1]));
+        componentes[termos[2]] = Integer.parseInt(string.substring(pos[1] + 1));
       } catch (Exception e) { return false; }
 
       return consistencia(componentes[termos[0]], componentes[termos[1]], componentes[termos[2]]);
@@ -146,8 +149,8 @@ public class Data
       );
     }
 
-    
-    public long dataDias() // nº de dias decorridos desde 1 de janeiro de 1900 até a data conteúdo da instância.
+    // método para retornar o nº de dias decorridos desde 1 de janeiro de 1900 até a data conteúdo da instância.
+    public long dataDias()
     {
       long dias = componentes[0];
       for (int ctano = 1900; ctano < componentes[2]; ++ctano){ 
@@ -159,6 +162,7 @@ public class Data
       return dias; 
     }
 
+    // método para transformar dias em data
     private void diasData(long d) //dias desde 1-jan-1900, define o conteúdo da instancia que ativa o método
     {
       int ctano = 1900, ctmes = 1, ctdias = 0, delta = 0;
@@ -190,16 +194,17 @@ public class Data
       int a = componentes[termos[2]];
       
       Data tempData = new Data("01/01/1900");
-      tempData.diasData( this.dataDias() - dias );
+      tempData.diasData( this.dataDias() + dias );
       return tempData;
     }
 
     // public Data sub(int dias) // Data – dias => Data anterior em dias
     // {
-    //     // ...
+    //    // ...
     // }
+
     // public long sub(Data d) // Data – Data => dias decorridos entre as duas datas.
     // {
-    //     // ...
+    //    // ...
     // }
 }
