@@ -191,10 +191,6 @@ public class Data
 
     public Data soma(int dias) // Data + dias => Outra Data posterior em dias
     {
-      int d = componentes[termos[0]];
-      int m = componentes[termos[1]];
-      int a = componentes[termos[2]];
-      
       Data tempData = new Data("01/01/1900");
       tempData.diasData( this.dataDias() + dias );
       return tempData;
