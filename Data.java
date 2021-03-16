@@ -142,9 +142,9 @@ public class Data
     // método String para retornar a data contida numa string
     public String dataString() 
     {
-    return ("" +
-        componentes[termos[0]] + separador +
-        componentes[termos[1]] + separador +
+    return String.format("%02d%c%02d%c%d",
+        componentes[termos[0]], separador,
+        componentes[termos[1]], separador, 
         componentes[termos[2]]
       );
     }
@@ -171,7 +171,8 @@ public class Data
       { 
         delta = (bissexto(ctano)) ? 366 : 365;
         ctdias += delta;
-        ++ctano; 
+        ++ctano;
+        if (ctdias > d) ctano--;
       }
       ctdias -= delta; 
       componentes[2] = ctano; 
@@ -180,7 +181,8 @@ public class Data
       { 
         delta = diasMes(ctmes, ctano); 
         ctdias += delta; 
-        ++ctmes; 
+        ++ctmes;
+        if (ctdias > d) ctmes--;
       } 
       ctdias -= delta; 
       componentes[1] = ctmes; 

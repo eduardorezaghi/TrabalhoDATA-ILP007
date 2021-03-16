@@ -2,10 +2,11 @@ import java.util.Scanner;
 
 public class Main {
     public static void main(String[] args) {
-        Data novaData1 = new Data("20/02/2001"); // formato britânico
+        Data novaData1 = new Data("29/02/2096"); // formato britânico
         System.out.printf("Data armazenada no objeto: \t%s%n",novaData1.dataString()); // invocando método de instância dataString para exibir a data armazenada no atributo componentes[]
-
-        System.out.printf("Dias decorridos até o conteúdo da instância = %d%n",novaData1.dataDias());
-        System.out.printf("5 dias somados = %s%n", (novaData1.soma(5)).dataString() );
+        int dias = 366;
+        System.out.printf("%d dias somados = \t%s%n",dias,(novaData1.soma(dias)).dataString() );
+/*         Data tempData = new Data("20/02/2002");
+        System.out.printf("%s - %s = \t%02d dias%n",novaData1.dataString(),tempData.dataString(),novaData1.sub(tempData)); */
     }
 }
