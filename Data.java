@@ -100,7 +100,12 @@ public class Data
     // método construtor com parâmetro String
     public Data(String sd)
     {
-      this.stringData(sd);
+      if (!stringData(sd))
+      {
+        this.componentes[0] = 0;
+        this.componentes[1] = 0;
+        this.componentes[2] = 0;
+      }
     }
 
     // método construtor de cópia com parâmetro Data
