@@ -3,7 +3,7 @@
 /* NOMES  
 *  EDUARDO AUGUSTO REZAGHI TALIANI    RA: 192072-12
 *  RICARDO MOLINA OLIVEIRA DE AMORIM  RA: 
-*  YURI TAKAE WATANABE                RA: 
+*  YURI TAKAE WATANABE                RA: 192142-62
 */
 public class Data
 {
@@ -94,7 +94,11 @@ public class Data
   // método construtor com parâmetros int
   public Data(int d, int m, int a)
   {
-    // ...
+    if(consistencia(d, m, a)){
+      componentes[termos[0]] = d;
+      componentes[termos[1]] = m;
+      componentes[termos[2]] = a;
+    }
   }
 
   // método construtor com parâmetro String
@@ -111,7 +115,9 @@ public class Data
   // método construtor de cópia com parâmetro Data
   public Data(Data data)
   {
-    // ...
+    this.componentes[0] = data.componentes[0];
+    this.componentes[1] = data.componentes[1];
+    this.componentes[2] = data.componentes[2];
   }
 
   // método boolean para definir valor da data por meio de uma String, e validar se a data é válida
@@ -155,9 +161,9 @@ public class Data
   }
 
   // método para retornar o nº de dias decorridos desde 1 de janeiro de 1900 até a data conteúdo da instância.
-  public long dataDias()
+  public int dataDias()
   {
-    long dias = componentes[0];
+    int dias = componentes[0];
     for (int ctano = 1900; ctano < componentes[2]; ++ctano)
       dias += bissexto(ctano) ? 366 : 365;
     
@@ -168,7 +174,7 @@ public class Data
   }
 
   // método para transformar dias em data
-  private void diasData(long d) //dias desde 1-jan-1900, define o conteúdo da instancia que ativa o método
+  private void diasData(int d) //dias desde 1-jan-1900, define o conteúdo da instancia que ativa o método
   {
     int ctano = 1900, ctmes = 1, ctdias = 0, delta = 0;
   
@@ -191,8 +197,15 @@ public class Data
     } 
     ctdias -= delta; 
     componentes[1] = ctmes; 
-    componentes[0] = (int) d - ctdias;
+    componentes[0] = d - ctdias;
   }
+
+  // public Data soma(int dias) // Data + dias => Outra Data posterior em dias
+  // {
+  //   Data tempData = new Data("01/01/1900");
+  //   tempData.diasData( this.dataDias() + dias );
+  //   return tempData;
+  // }
 
   public Data soma(int dias) // Data + dias => Outra Data posterior em dias
   {
@@ -201,13 +214,19 @@ public class Data
     return tempData;
   }
 
-  // public Data sub(int dias) // Data – dias => Data anterior em dias
-  // {
-  //   // ...
-  // }
+  public Data sub(int dias) // Data - dias => Outra Data anterior em dias
+  {
+    Data tempData = new Data("01/01/1900");
+    tempData.diasData( this.dataDias() + dias );
+    return tempData;
+  }
 
-  // public long sub(Data d) // Data – Data => dias decorridos entre as duas datas.
-  // {
-  //    // ...
-  // }
+  public int sub(Data d) // Data – Data => dias decorridos entre as duas datas.
+  {
+    int dias = dataDias() - d.dataDias();
+    if (dias < 0)
+      return dias * -1;
+    else
+      return dias;
+  }
 }
